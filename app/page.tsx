@@ -1,8 +1,8 @@
 'use client'
 import ListCard from "@/components/ListCard";
-// import FacebookLogin from "@greatsumini/react-facebook-login";
+import FacebookLogin from "@greatsumini/react-facebook-login";
 import Link from "next/link";
-import FacebookLogin from 'react-facebook-login';
+// import FacebookLogin from 'react-facebook-login';
 import { Suspense } from "react";
 
 const getData = async (params: any) => {
@@ -35,7 +35,7 @@ export default async function Home(router: any) {
         key={query + currentPage}
         fallback={<div>loading..................</div>}
       >
-        {/* <FacebookLogin
+        <FacebookLogin
           appId="970633574589757"
           onSuccess={(response) => {
             console.log('Login Success!', response);
@@ -51,14 +51,14 @@ export default async function Home(router: any) {
             version: 'v22.0',
             xfbml: true,
           }}
-        /> */}
-        <FacebookLogin
+        />
+        {/* <FacebookLogin
           buttonStyle={{ padding: "6px" }}
           appId="970633574589757"  // we need to get this from facebook developer console by setting the app.
           autoLoad={false}
           fields="name,email,picture"
           scope="public_profile, email"
-          callback={(e) => console.log(e)} />
+          callback={(e) => console.log(e)} /> */}
       </Suspense>
     </main>
   );
