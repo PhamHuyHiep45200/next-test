@@ -61,7 +61,7 @@ export default function Home(router: any) {
           }}
           scope="email,public_profile"
           initParams={{
-            version: 'v20.0',
+            version: 'v16.0',
             xfbml: true,
           }}
         />
