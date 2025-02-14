@@ -4,6 +4,7 @@ import FacebookLogin from "@greatsumini/react-facebook-login";
 import Link from "next/link";
 // import FacebookLogin from 'react-facebook-login';
 import { Suspense, useEffect } from "react";
+import { loadSDK, loginFB } from '@/auth/facebook'
 
 declare global {
   interface Window {
@@ -34,37 +35,8 @@ export default function Home(router: any) {
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
 
-  const loadSDK = () => {
-    window.fbAsyncInit = function () {
-      window.FB.init({
-        appId: "970633574589757",
-        cookie: true,
-        xfbml: true,
-        version: "v22.0",
-      });
-
-      FB.AppEvents.logPageView();
-    };
-
-    (function (d, s, id) {
-      var js: HTMLScriptElement,
-        fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {
-        return;
-      }
-      js = d.createElement(s) as HTMLScriptElement;
-      js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
-      if (fjs.parentNode) {
-        fjs.parentNode.insertBefore(js, fjs);
-      }
-    })(document, "script", "facebook-jssdk");
-  };
-
   const getFacebookLoginUrl = () => {
-    window.FB.login(function (response) {
-      console.log(response);
-    });
+    loginFB()
   };
 
   useEffect(() => {
