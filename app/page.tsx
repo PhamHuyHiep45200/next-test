@@ -3,7 +3,7 @@ import ListCard from "@/components/ListCard";
 import FacebookLogin from "@greatsumini/react-facebook-login";
 import Link from "next/link";
 // import FacebookLogin from 'react-facebook-login';
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 
 const getData = async (params: any) => {
   const res = await fetch(`http://localhost:5000/data?page=${params.page}`, {
@@ -27,17 +27,39 @@ export default function Home(router: any) {
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
 
-  const getFacebookLoginUrl = () => {
-    const url = `https://www.facebook.com/v22.0/dialog/oauth` // Thay v18.0 bằng phiên bản mới nhất nếu cần
-    const params = new URLSearchParams()
-    params.set("client_id", `970633574589757`) // App ID của Facebook
-    // params.set("redirect_uri", encodeURI(APP_CONFIG.REDIRECT_URI("facebook"))) // URL chuyển hướng
-    // params.set("state", APP_CONFIG.LOCAL_HOST) // Để bảo mật, dùng để xác minh
-    params.set("response_type", "code")
-    params.set("scope", "email,public_profile") // Các quyền truy cập
-    // return `${url}?${params}`
-    window.open(`${url}?${params}`)
+  const loadSDK = () => {
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '970633574589757',
+        cookie: true,
+        xfbml: true,
+        version: 'v22.0'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
   }
+
+  const getFacebookLoginUrl = () => {
+    FB.login(function (response) {
+      console.log(response);
+    });
+  }
+
+  useEffect(() => {
+    if (window) {
+      loadSDK()
+    }
+  }, [])
   return (
     <main className="flex min-h-screen flex-col p-24">
       <div className="flex justify-end">
@@ -49,7 +71,7 @@ export default function Home(router: any) {
       >
         <button onClick={getFacebookLoginUrl}>getFacebookLoginUrl</button>
         <FacebookLogin
-          appId="1229981894257870"
+          appId="1269005241057356"
           onSuccess={(response) => {
             console.log('Login Success!', response);
           }}
