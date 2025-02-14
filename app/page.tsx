@@ -54,7 +54,7 @@ export default function Home(router: any) {
         fallback={<div>loading..................</div>}
       >
         <button onClick={getFacebookLoginUrl}>getFacebookLoginUrl</button>
-        <FacebookLogin
+        {/* <FacebookLogin
           appId="1269005241057356"
           onSuccess={(response) => {
             console.log("Login Success!", response);
@@ -70,7 +70,7 @@ export default function Home(router: any) {
             version: "v16.0",
             xfbml: true,
           }}
-        />
+        /> */}
         {/* <FacebookLogin
           buttonStyle={{ padding: "6px" }}
           appId="970633574589757"  // we need to get this from facebook developer console by setting the app.
