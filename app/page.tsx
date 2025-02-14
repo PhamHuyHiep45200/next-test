@@ -17,7 +17,7 @@ const getData = async (params: any) => {
   return await res.json();
 };
 
-export default async function Home(router: any) {
+export default function Home(router: any) {
   const { params, searchParams } = router;
   console.log(params, searchParams);
 
@@ -26,6 +26,18 @@ export default async function Home(router: any) {
 
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
+
+  const getFacebookLoginUrl = () => {
+    const url = `https://www.facebook.com/v22.0/dialog/oauth` // Thay v18.0 bằng phiên bản mới nhất nếu cần
+    const params = new URLSearchParams()
+    params.set("client_id", `970633574589757`) // App ID của Facebook
+    // params.set("redirect_uri", encodeURI(APP_CONFIG.REDIRECT_URI("facebook"))) // URL chuyển hướng
+    // params.set("state", APP_CONFIG.LOCAL_HOST) // Để bảo mật, dùng để xác minh
+    params.set("response_type", "code")
+    params.set("scope", "email,public_profile") // Các quyền truy cập
+    // return `${url}?${params}`
+    window.open(`${url}?${params}`)
+  }
   return (
     <main className="flex min-h-screen flex-col p-24">
       <div className="flex justify-end">
@@ -35,8 +47,9 @@ export default async function Home(router: any) {
         key={query + currentPage}
         fallback={<div>loading..................</div>}
       >
+        <button onClick={getFacebookLoginUrl}>getFacebookLoginUrl</button>
         <FacebookLogin
-          appId="970633574589757"
+          appId="1229981894257870"
           onSuccess={(response) => {
             console.log('Login Success!', response);
           }}
