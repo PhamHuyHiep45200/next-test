@@ -48,7 +48,7 @@ export default async function Home(router: any) {
           }}
           scope="email,public_profile"
           initParams={{
-            version: 'v22.0',
+            // version: 'v22.0',
             xfbml: true,
           }}
         />
