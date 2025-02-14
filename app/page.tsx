@@ -36,7 +36,7 @@ export default function Home(router: any) {
 
   const loadSDK = () => {
     window.fbAsyncInit = function () {
-      FB.init({
+      window.FB.init({
         appId: "970633574589757",
         cookie: true,
         xfbml: true,
@@ -62,7 +62,7 @@ export default function Home(router: any) {
   };
 
   const getFacebookLoginUrl = () => {
-    FB.login(function (response) {
+    window.FB.login(function (response) {
       console.log(response);
     });
   };
