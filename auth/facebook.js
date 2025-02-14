@@ -1,7 +1,7 @@
 export const loadSDK = () => {
   window.fbAsyncInit = function () {
     window.FB.init({
-      appId: "970633574589757",
+      appId: "1269005241057356",
       cookie: true,
       xfbml: true,
       version: "v22.0",
