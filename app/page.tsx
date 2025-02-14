@@ -12,7 +12,7 @@ export default function Home() {
 
   // Load Facebook SDK khi component mount
   useEffect(() => {
-    if (window.FB) {
+    if (window?.FB) {
       setFbLoaded(true);
       return;
     }
@@ -37,7 +37,7 @@ export default function Home() {
 
   // Hàm đăng nhập Facebook
   const loginFB = () => {
-    if (!window.FB) {
+    if (!window?.FB) {
       console.error("Facebook SDK chưa sẵn sàng!");
       return;
     }
