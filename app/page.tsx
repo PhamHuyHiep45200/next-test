@@ -1,81 +1,65 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+'use client'
 import ListCard from "@/components/ListCard";
-import Link from "next/link";
 import FacebookLogin from "@greatsumini/react-facebook-login";
+import Link from "next/link";
+// import FacebookLogin from 'react-facebook-login';
+import { Suspense } from "react";
 
-export default function Home() {
-  const router = useRouter();
-  const [fbLoaded, setFbLoaded] = useState(false);
-  const [userData, setUserData] = useState(null);
+const getData = async (params: any) => {
+  const res = await fetch(`http://localhost:5000/data?page=${params.page}`, {
+    cache: "no-store",
+  });
 
-  // Load Facebook SDK khi component mount
-  useEffect(() => {
-    if (window?.FB) {
-      setFbLoaded(true);
-      return;
-    }
+  if (!res.ok) {
+    throw new Error("error data");
+  }
 
-    window.fbAsyncInit = function () {
-      window.FB.init({
-        appId: "970633574589757",
-        cookie: true,
-        xfbml: true,
-        version: "v22.0",
-      });
-      setFbLoaded(true);
-    };
+  return await res.json();
+};
 
-    const script = document.createElement("script");
-    script.src = "https://connect.facebook.net/en_US/sdk.js";
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setFbLoaded(true);
-    document.body.appendChild(script);
-  }, []);
+export default async function Home(router: any) {
+  const { params, searchParams } = router;
+  console.log(params, searchParams);
 
-  // Hàm đăng nhập Facebook
-  const loginFB = () => {
-    if (!window?.FB) {
-      console.error("Facebook SDK chưa sẵn sàng!");
-      return;
-    }
 
-    window.FB.login(
-      (response) => {
-        if (response.authResponse) {
-          console.log("FB token:", response.authResponse.accessToken);
+  // const data = await getData({ page: searchParams.page || 1 });
 
-          // Lấy thông tin người dùng
-          window.FB.api("/me", { fields: "id,name,email" }, (userInfo) => {
-            console.log("User Info:", userInfo);
-            setUserData(userInfo);
-          });
-        } else {
-          console.log("User cancelled login or did not fully authorize.");
-        }
-      },
-      { scope: "email,public_profile" }
-    );
-  };
-
+  const query = searchParams?.query || "";
+  const currentPage = Number(searchParams?.page) || 1;
   return (
     <main className="flex min-h-screen flex-col p-24">
       <div className="flex justify-end">
         <button>add product</button>
       </div>
-
-      <button onClick={loginFB} disabled={!fbLoaded} className="mt-4 p-2 bg-blue-500 text-white">
-        {fbLoaded ? "Login with Facebook" : "Loading Facebook SDK..."}
-      </button>
-
-      {userData && (
-        <div className="mt-4 p-4 border border-gray-300">
-          <p><strong>Name:</strong> {userData.name}</p>
-          <p><strong>Email:</strong> {userData.email}</p>
-        </div>
-      )}
+      <Suspense
+        key={query + currentPage}
+        fallback={<div>loading..................</div>}
+      >
+        <FacebookLogin
+          appId="970633574589757"
+          onSuccess={(response) => {
+            console.log('Login Success!', response);
+          }}
+          onFail={(error) => {
+            console.log('Login Failed!', error);
+          }}
+          onProfileSuccess={(response) => {
+            console.log('Get Profile Success!', response);
+          }}
+          scope="email,public_profile"
+          initParams={{
+            version: 'v20.0',
+            xfbml: true,
+          }}
+        />
+        {/* <FacebookLogin
+          buttonStyle={{ padding: "6px" }}
+          appId="970633574589757"  // we need to get this from facebook developer console by setting the app.
+          autoLoad={false}
+          fields="name,email,picture"
+          scope="public_profile, email"
+          callback={(e) => console.log(e)} /> */}
+      </Suspense>
     </main>
   );
 }
